@@ -4,6 +4,7 @@ from app.models import Student
 
 main = Blueprint("main", __name__)
 
+
 @main.route("/healthcheck", methods=["GET"])
 def healthcheck():
     return jsonify({"status": "healthy"}), 200

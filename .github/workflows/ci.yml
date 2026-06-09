@@ -1,0 +1,47 @@
+name: Student API CI Pipeline
+
+on:
+  workflow_dispatch:
+
+  push:
+    paths:
+      - 'app/**'
+      - 'tests/**'
+      - 'Dockerfile'
+      - 'requirements.txt'
+      - 'docker-compose.yml'
+      - 'Makefile'
+
+jobs:
+  ci:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install flake8 pytest
+
+      - name: Run Unit Tests
+        run: |
+          pytest
+
+      - name: Run Code Linting
+        run: |
+          flake8 app/
+
+      - name: Build Docker Image
+        run: |
+          docker build -t student-api:1.0.0 .
+
+      - name: Verify Docker Image
+        run: |
+          docker images | grep student-api
