@@ -11,6 +11,7 @@ on:
       - 'requirements.txt'
       - 'docker-compose.yml'
       - 'Makefile'
+      - '.github/workflows/ci.yml'
 
 jobs:
   ci:
@@ -21,12 +22,12 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Verify Python
-        run: python3 --version
+        run: |
+          python3 --version
 
       - name: Install Dependencies
         run: |
-          python3 -m pip install --user -r requirements.txt
-          echo "$HOME/.local/bin" >> $GITHUB_PATH
+          python3 -m pip install --break-system-packages -r requirements.txt
 
       - name: Run Unit Tests
         run: |
